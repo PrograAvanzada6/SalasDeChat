@@ -36,12 +36,17 @@ public class Servidor {
 				salida.writeUTF("Elija Sala de Chat");
 				DataInputStream entrada = new DataInputStream(socket.getInputStream());
 				String msj = entrada.readUTF();
-				salida.writeUTF("Bienvenido a la sala: " + msj + ". Puede empezar a chatear");
 				
+				while(!salas.containsKey(Integer.parseInt(msj))){
+					salida.writeUTF("La sala que eligió no existe. Vuelva a elegir una Sala de Chat: ");
+					entrada = new DataInputStream(socket.getInputStream());
+					msj = entrada.readUTF();
+				}
+				
+				salida.writeUTF("Bienvenido a la sala: " + msj + ". Puede empezar a chatear...");
 				Sala sala = salas.get(Integer.parseInt(msj));
 				sala.agregar(socket);
 				new AtencionAlCliente(socket, sala).start();
-				
 
 			}
 		} catch (IOException e) {
